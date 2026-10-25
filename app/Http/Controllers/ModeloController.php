@@ -2,20 +2,26 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use App\Models\Modelo;
+use App\Services\ModeloService;
 
 class ModeloController extends Controller
 {
+    protected $modeloService;
+
+    public function __construct(ModeloService $modeloService)
+    {
+        $this->modeloService = $modeloService;
+    }
+
     // GET /api/modelos -> todos los modelos con su marca
     public function index()
     {
-        return response()->json(Modelo::with('marca')->get());
+        return response()->json($this->modeloService->obtenerModelos());
     }
 
     // GET /api/modelos/{modelo} -> un modelo con su marca y las sucursales donde está (con stock)
-    public function show(Modelo $modelo)
+    public function show($modelo)
     {
-        return response()->json($modelo->load('marca', 'sucursales'));
+        return response()->json($this->modeloService->obtenerPorId($modelo));
     }
 }
