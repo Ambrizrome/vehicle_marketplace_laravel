@@ -3,6 +3,9 @@ services:
     image: mcr.microsoft.com/devcontainers/php:8.1
     volumes:
       - ..:/workspaces/portfolio:cached
+      - claude-code-config:/home/vscode/.claude
+    environment:
+      CLAUDE_CONFIG_DIR: /home/vscode/.claude
     command: sleep infinity
     depends_on:
       - db
@@ -19,4 +22,7 @@ services:
       - ../larosite.sql:/docker-entrypoint-initdb.d/larosite.sql:ro
 
 volumes:
+  claude-code-config:
+    name: claude-code-config
+    external: true
   db_data:

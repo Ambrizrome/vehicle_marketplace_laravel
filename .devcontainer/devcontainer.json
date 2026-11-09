@@ -3,6 +3,12 @@
     "dockerComposeFile": "docker-compose.yml",
     "service": "app",
     "workspaceFolder": "/workspaces/portfolio",
+    "shutdownAction": "stopCompose",
+    "remoteUser": "vscode",
+    "features": {
+        "ghcr.io/devcontainers/features/node:1": {},
+        "ghcr.io/anthropics/devcontainer-features/claude-code:1": {}
+    },
     "forwardPorts": [8000],
-    "postCreateCommand": "sudo docker-php-ext-install pdo_mysql && composer install && cp -n .env.example .env && sed -i 's/^DB_HOST=.*/DB_HOST=db/; s/^DB_DATABASE=.*/DB_DATABASE=catalogo_autos_lujo/; s/^DB_USERNAME=.*/DB_USERNAME=laravel/; s/^DB_PASSWORD=.*/DB_PASSWORD=secret/' .env && php artisan key:generate"
-  }
+    "postCreateCommand": "sudo chown -R vscode:vscode /home/vscode/.claude && sudo PHP_INI_DIR=$PHP_INI_DIR docker-php-ext-install pdo_mysql && composer install && cp -n .env.example .env && sed -i 's/^DB_HOST=.*/DB_HOST=db/; s/^DB_DATABASE=.*/DB_DATABASE=larosite/; s/^DB_USERNAME=.*/DB_USERNAME=laravel/; s/^DB_PASSWORD=.*/DB_PASSWORD=secret/' .env && php artisan key:generate"
+}
