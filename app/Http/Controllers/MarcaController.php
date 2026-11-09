@@ -19,9 +19,9 @@ class MarcaController extends Controller
         return response()->json($this->marcaService->obtenerMarcas());
     }
 
-    // GET /api/marcas/{marca} -> una marca con sus modelos
-    public function show($marca)
+    // GET /api/marcas/{id} -> una marca con sus modelos
+    public function show($id)
     {
-        return response()->json($this->marcaService->obtenerPorId($marca));
+        return response()->json($this->marcaService->obtenerPorId($id));
     }
 }

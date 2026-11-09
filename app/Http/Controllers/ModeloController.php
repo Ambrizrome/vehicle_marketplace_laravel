@@ -19,9 +19,9 @@ class ModeloController extends Controller
         return response()->json($this->modeloService->obtenerModelos());
     }
 
-    // GET /api/modelos/{modelo} -> un modelo con su marca y las sucursales donde está (con stock)
-    public function show($modelo)
+    // GET /api/modelos/{id} -> un modelo con su marca y las sucursales donde está (con stock)
+    public function show($id)
     {
-        return response()->json($this->modeloService->obtenerPorId($modelo));
+        return response()->json($this->modeloService->obtenerPorId($id));
     }
 }

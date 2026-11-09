@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
+use App\Http\Requests\StorePedidoRequest;
 use App\Services\PedidoService;
 
 class PedidoController extends Controller
@@ -14,28 +14,17 @@ class PedidoController extends Controller
         $this->pedidoService = $pedidoService;
     }
 
-    // GET /api/pedidos -> lista de pedidos con modelo, marca y sucursal
+    // GET /api/pedidos -> lista paginada de pedidos con modelo, marca y sucursal
     public function index()
     {
         return response()->json($this->pedidoService->obtenerPedidos());
     }
 
     // POST /api/pedidos -> crea un pedido si la sucursal tiene stock del modelo
-    public function store(Request $request)
+    public function store(StorePedidoRequest $request)
     {
-        // Validación básica (si falla, Laravel responde 422 con los errores)
-        $datos = $request->validate([
-            'modelo_id'      => 'required|exists:modelos,id',
-            'sucursal_id'    => 'required|exists:sucursales,id',
-            'cliente_nombre' => 'required|string|max:100',
-            'cliente_email'  => 'required|email',
-        ]);
-
-        $pedido = $this->pedidoService->crearPedido($datos);
-
-        if (!$pedido) {
-            return response()->json(['mensaje' => 'Modelo sin stock en esta sucursal'], 422);
-        }
+        // Si no hay stock, el service lanza el error y Laravel responde 422
+        $pedido = $this->pedidoService->crearPedido($request->validated());
 
         return response()->json($pedido, 201);
     }

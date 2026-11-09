@@ -4,40 +4,51 @@ namespace App\Services;
 
 use App\Models\Pedido;
 use App\Models\Sucursal;
-use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Validation\ValidationException;
 
 class PedidoService
 {
-    // Lista los pedidos con modelo, marca y sucursal, del más reciente al más antiguo
-    public function obtenerPedidos(): Collection
+    // Lista los pedidos con modelo, marca y sucursal, del más reciente al más antiguo (15 por página, ?page=2)
+    // Se ordena por id porque varios pedidos pueden tener el mismo created_at y las páginas se mezclarían
+    public function obtenerPedidos(): LengthAwarePaginator
     {
-        return Pedido::with(['modelo.marca', 'sucursal'])->latest()->get();
+        return Pedido::with(['modelo.marca', 'sucursal'])->latest('id')->paginate(15);
     }
 
-    // Crea un pedido si la sucursal tiene stock del modelo; devuelve null si no hay stock
-    public function crearPedido(array $datos): ?Pedido
+    // Crea un pedido si la sucursal tiene stock del modelo; si no, lanza un error 422 con el motivo
+    public function crearPedido(array $datos): Pedido
     {
-        // Buscamos el modelo dentro de esa sucursal para leer el stock de la tabla pivote
-        $sucursal = Sucursal::findOrFail($datos['sucursal_id']);
-        $modelo = $sucursal->modelos()->where('modelos.id', $datos['modelo_id'])->first();
+        // Transacción: si algo falla, no queda un pedido sin descontar stock
+        return DB::transaction(function () use ($datos) {
+            // lockForUpdate bloquea la fila del stock hasta terminar, así dos pedidos no toman la misma unidad
+            $sucursal = Sucursal::findOrFail($datos['sucursal_id']);
+            $modelo = $sucursal->modelos()->where('modelos.id', $datos['modelo_id'])->lockForUpdate()->first();
 
-        if (!$modelo || $modelo->pivot->stock < 1) {
-            return null;
-        }
+            // ValidationException: Laravel la convierte en una respuesta 422 con el mensaje
+            if (!$modelo) {
+                throw ValidationException::withMessages(['modelo_id' => 'Este modelo no se vende en esta sucursal']);
+            }
 
-        // Creamos el pedido con el precio actual del modelo como total
-        $pedido = Pedido::create([
-            'modelo_id'      => $modelo->id,
-            'sucursal_id'    => $sucursal->id,
-            'cliente_nombre' => $datos['cliente_nombre'],
-            'cliente_email'  => $datos['cliente_email'],
-            'total'          => $modelo->precio,
-            'estado'         => 'pendiente',
-        ]);
+            if ($modelo->pivot->stock < 1) {
+                throw ValidationException::withMessages(['modelo_id' => 'Modelo sin stock en esta sucursal']);
+            }
 
-        // Descontamos una unidad del stock de esa sucursal
-        $sucursal->modelos()->updateExistingPivot($modelo->id, ['stock' => $modelo->pivot->stock - 1]);
+            // Creamos el pedido con el precio actual del modelo como total
+            $pedido = Pedido::create([
+                'modelo_id'      => $modelo->id,
+                'sucursal_id'    => $sucursal->id,
+                'cliente_nombre' => $datos['cliente_nombre'],
+                'cliente_email'  => $datos['cliente_email'],
+                'total'          => $modelo->precio,
+                'estado'         => 'pendiente',
+            ]);
 
-        return $pedido;
+            // Descontamos una unidad del stock de esa sucursal
+            $sucursal->modelos()->updateExistingPivot($modelo->id, ['stock' => $modelo->pivot->stock - 1]);
+
+            return $pedido;
+        });
     }
 }

@@ -19,9 +19,9 @@ class SucursalController extends Controller
         return response()->json($this->sucursalService->obtenerSucursales());
     }
 
-    // GET /api/sucursales/{sucursal} -> sucursal con los modelos que ofrece (y la marca de cada uno)
-    public function show($sucursal)
+    // GET /api/sucursales/{id} -> sucursal con los modelos que ofrece (y la marca de cada uno)
+    public function show($id)
     {
-        return response()->json($this->sucursalService->obtenerPorId($sucursal));
+        return response()->json($this->sucursalService->obtenerPorId($id));
     }
 }

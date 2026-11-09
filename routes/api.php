@@ -23,18 +23,19 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 // Todas las rutas de este archivo llevan el prefijo /api
+// whereNumber('id'): si el id no es número, responde 404 sin consultar la BD
 
 // Marcas
 Route::get('/marcas', [MarcaController::class, 'index']);
-Route::get('/marcas/{marca}', [MarcaController::class, 'show']);
+Route::get('/marcas/{id}', [MarcaController::class, 'show'])->whereNumber('id');
 
 // Modelos (productos)
 Route::get('/modelos', [ModeloController::class, 'index']);
-Route::get('/modelos/{modelo}', [ModeloController::class, 'show']);
+Route::get('/modelos/{id}', [ModeloController::class, 'show'])->whereNumber('id');
 
 // Sucursales (vendedores)
 Route::get('/sucursales', [SucursalController::class, 'index']);
-Route::get('/sucursales/{sucursal}', [SucursalController::class, 'show']);
+Route::get('/sucursales/{id}', [SucursalController::class, 'show'])->whereNumber('id');
 
 // Pedidos
 Route::get('/pedidos', [PedidoController::class, 'index']);
