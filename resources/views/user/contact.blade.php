@@ -2,11 +2,12 @@
 @section('title', 'Contact | My Site')
 @section('content')
 
-<h1>Contact With Me</h1>
+{{-- Plantilla: reemplazar con el contenido del frontend --}}
+<h1>Contacto</h1>
 <pre>
-{{ $contact->Content }}
+Texto de contacto
 </pre>
-Adress: {{ $contact->Adress }} <br />
-Phone Number: {{ $contact->PhoneNumber }}
+Dirección: <br />
+Teléfono:
 
 @stop

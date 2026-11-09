@@ -2,9 +2,10 @@
 @section('title', 'Home | My Site')
 @section('content')
 
-<h1>{{ $home->Headline }}</h1>
+{{-- Plantilla: reemplazar con el contenido del frontend --}}
+<h1>Título de bienvenida</h1>
 <pre>
-    {{ $home->Subline }}
+    Texto de presentación
 </pre>
 
 @stop

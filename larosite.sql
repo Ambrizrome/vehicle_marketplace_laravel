@@ -24,26 +24,6 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
--- Table structure for table `contact`
---
-
-CREATE TABLE `contact` (
-  `Id` int(1) NOT NULL,
-  `Content` varchar(500) NOT NULL,
-  `Adress` varchar(256) NOT NULL,
-  `PhoneNumber` varchar(15) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
---
--- Dumping data for table `contact`
---
-
-INSERT INTO `contact` (`Id`, `Content`, `Adress`, `PhoneNumber`) VALUES
-(1, 'Hi there, I am Ümit!\r\nYou may choose me if you need a Developer.\r\n(it is not a yatırım tavsiyesi)', 'Sokantro Mah. Kandro Cad. Sokak Sok. No: 1 Almanya/Türkiye', 'I don\'t know');
-
--- --------------------------------------------------------
-
---
 -- Table structure for table `failed_jobs`
 --
 
@@ -56,25 +36,6 @@ CREATE TABLE `failed_jobs` (
   `exception` longtext COLLATE utf8mb4_unicode_ci NOT NULL,
   `failed_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `home`
---
-
-CREATE TABLE `home` (
-  `Id` int(1) NOT NULL,
-  `Headline` varchar(64) NOT NULL,
-  `Subline` varchar(250) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
---
--- Dumping data for table `home`
---
-
-INSERT INTO `home` (`Id`, `Headline`, `Subline`) VALUES
-(1, 'Welcome To My Personal Website', 'You can get information about me through this site');
 
 -- --------------------------------------------------------
 
@@ -131,26 +92,6 @@ CREATE TABLE `personal_access_tokens` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `skills`
---
-
-CREATE TABLE `skills` (
-  `Id` int(2) NOT NULL,
-  `Skill` varchar(64) NOT NULL,
-  `Description` varchar(250) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
---
--- Dumping data for table `skills`
---
-
-INSERT INTO `skills` (`Id`, `Skill`, `Description`) VALUES
-(1, 'PHP', 'I can build your applications such as e-commerce/personal sites and CRM/content management systems without using any framework'),
-(2, 'A1 Level English', 'I got this skill to help everyone out');
-
--- --------------------------------------------------------
-
---
 -- Table structure for table `users`
 --
 
@@ -170,23 +111,11 @@ CREATE TABLE `users` (
 --
 
 --
--- Indexes for table `contact`
---
-ALTER TABLE `contact`
-  ADD PRIMARY KEY (`Id`);
-
---
 -- Indexes for table `failed_jobs`
 --
 ALTER TABLE `failed_jobs`
   ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `failed_jobs_uuid_unique` (`uuid`);
-
---
--- Indexes for table `home`
---
-ALTER TABLE `home`
-  ADD PRIMARY KEY (`Id`);
 
 --
 -- Indexes for table `migrations`
@@ -209,12 +138,6 @@ ALTER TABLE `personal_access_tokens`
   ADD KEY `personal_access_tokens_tokenable_type_tokenable_id_index` (`tokenable_type`,`tokenable_id`);
 
 --
--- Indexes for table `skills`
---
-ALTER TABLE `skills`
-  ADD PRIMARY KEY (`Id`);
-
---
 -- Indexes for table `users`
 --
 ALTER TABLE `users`
@@ -226,22 +149,10 @@ ALTER TABLE `users`
 --
 
 --
--- AUTO_INCREMENT for table `contact`
---
-ALTER TABLE `contact`
-  MODIFY `Id` int(1) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
-
---
 -- AUTO_INCREMENT for table `failed_jobs`
 --
 ALTER TABLE `failed_jobs`
   MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `home`
---
-ALTER TABLE `home`
-  MODIFY `Id` int(1) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `migrations`
@@ -254,12 +165,6 @@ ALTER TABLE `migrations`
 --
 ALTER TABLE `personal_access_tokens`
   MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `skills`
---
-ALTER TABLE `skills`
-  MODIFY `Id` int(2) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `users`

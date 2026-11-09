@@ -4,7 +4,7 @@ Un sitio de portafolio sencillo construido con Laravel, desarrollado para la cla
 
 ## Descripción del Proyecto
 
-El proyecto es una aplicación backend en Laravel que incluye una API REST para un catálogo de autos: marcas, modelos, sucursales y pedidos. También conserva las secciones clásicas del portafolio (inicio, habilidades y contacto) con su panel de administración.
+El proyecto es una aplicación backend en Laravel que incluye una API REST para un catálogo de autos: marcas, modelos, sucursales y pedidos. Las vistas web (`resources/views`) son plantillas HTML estáticas que se reemplazarán con el frontend.
 
 ## Avance del Trabajo
 
