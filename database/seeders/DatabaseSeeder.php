@@ -17,5 +17,8 @@ class DatabaseSeeder extends Seeder
 
         // Carga marcas, modelos, sucursales y stock de prueba
         $this->call(CatalogoSeeder::class);
+
+        // Usuario admin (necesita ADMIN_PASSWORD en el .env)
+        $this->call(AdminSeeder::class);
     }
 }

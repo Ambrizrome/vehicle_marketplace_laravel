@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\StorePedidoRequest;
+use App\Http\Requests\UpdateEstadoPedidoRequest;
 use App\Services\PedidoService;
 
 class PedidoController extends Controller
@@ -27,5 +28,11 @@ class PedidoController extends Controller
         $pedido = $this->pedidoService->crearPedido($request->validated());
 
         return response()->json($pedido, 201);
+    }
+
+    // PATCH /api/pedidos/{id}/estado -> confirma o cancela un pedido pendiente (solo admin)
+    public function cambiarEstado(UpdateEstadoPedidoRequest $request, $id)
+    {
+        return response()->json($this->pedidoService->cambiarEstado($id, $request->validated()['estado']));
     }
 }

@@ -51,4 +51,28 @@ class PedidoService
             return $pedido;
         });
     }
+
+    // Confirma (venta) o cancela un pedido pendiente; si se cancela, la unidad vuelve al stock
+    public function cambiarEstado($id, string $estado): Pedido
+    {
+        return DB::transaction(function () use ($id, $estado) {
+            // lockForUpdate: si llegan dos cambios a la vez, el segundo ya ve el estado nuevo (no devuelve stock dos veces)
+            $pedido = Pedido::lockForUpdate()->findOrFail($id);
+
+            if ($pedido->estado !== 'pendiente') {
+                throw ValidationException::withMessages(['estado' => 'Solo se puede cambiar un pedido pendiente']);
+            }
+
+            if ($estado === 'cancelado') {
+                DB::table('modelo_sucursal')
+                    ->where('modelo_id', $pedido->modelo_id)
+                    ->where('sucursal_id', $pedido->sucursal_id)
+                    ->increment('stock');
+            }
+
+            $pedido->update(['estado' => $estado]);
+
+            return $pedido;
+        });
+    }
 }

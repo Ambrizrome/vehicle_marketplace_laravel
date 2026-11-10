@@ -5,6 +5,7 @@ use App\Http\Controllers\MarcaController;
 use App\Http\Controllers\ModeloController;
 use App\Http\Controllers\PedidoController;
 use App\Http\Controllers\SucursalController;
+use App\Http\Controllers\VentaController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -42,7 +43,16 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/user', [AuthController::class, 'user']);
     Route::post('/logout', [AuthController::class, 'logout']);
 
-    // Pedidos (llevan datos de clientes, por eso no son públicos)
-    Route::get('/pedidos', [PedidoController::class, 'index']);
+    // Cualquier usuario con token puede crear un pedido
     Route::post('/pedidos', [PedidoController::class, 'store']);
+
+    // Solo admin (con token pero sin permiso responde 403)
+    Route::middleware('can:admin')->group(function () {
+        // La lista lleva nombres de clientes, por eso solo la ve el admin
+        Route::get('/pedidos', [PedidoController::class, 'index']);
+        Route::patch('/pedidos/{id}/estado', [PedidoController::class, 'cambiarEstado'])->whereNumber('id');
+
+        // Ventas = pedidos confirmados
+        Route::get('/ventas', [VentaController::class, 'index']);
+    });
 });

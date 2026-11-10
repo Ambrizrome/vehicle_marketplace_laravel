@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Models\User;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 use Illuminate\Support\Facades\Gate;
 
@@ -25,6 +26,9 @@ class AuthServiceProvider extends ServiceProvider
     {
         $this->registerPolicies();
 
-        //
+        // Permiso "admin": se usa en las rutas con middleware('can:admin'); si no lo tiene, responde 403
+        Gate::define('admin', function (User $user) {
+            return $user->is_admin;
+        });
     }
 }
