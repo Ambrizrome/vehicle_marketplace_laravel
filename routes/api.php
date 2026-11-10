@@ -1,10 +1,10 @@
 <?php
 
+use App\Http\Controllers\AuthController;
 use App\Http\Controllers\MarcaController;
 use App\Http\Controllers\ModeloController;
 use App\Http\Controllers\PedidoController;
 use App\Http\Controllers\SucursalController;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -18,12 +18,12 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
-});
-
 // Todas las rutas de este archivo llevan el prefijo /api
 // whereNumber('id'): si el id no es número, responde 404 sin consultar la BD
+
+// Autenticación: register y login devuelven un token para usar como "Authorization: Bearer <token>"
+Route::post('/register', [AuthController::class, 'register']);
+Route::post('/login', [AuthController::class, 'login']);
 
 // Marcas
 Route::get('/marcas', [MarcaController::class, 'index']);
@@ -37,6 +37,12 @@ Route::get('/modelos/{id}', [ModeloController::class, 'show'])->whereNumber('id'
 Route::get('/sucursales', [SucursalController::class, 'index']);
 Route::get('/sucursales/{id}', [SucursalController::class, 'show'])->whereNumber('id');
 
-// Pedidos
-Route::get('/pedidos', [PedidoController::class, 'index']);
-Route::post('/pedidos', [PedidoController::class, 'store']);
+// Rutas que requieren token (sin token o con uno inválido responden 401)
+Route::middleware('auth:sanctum')->group(function () {
+    Route::get('/user', [AuthController::class, 'user']);
+    Route::post('/logout', [AuthController::class, 'logout']);
+
+    // Pedidos (llevan datos de clientes, por eso no son públicos)
+    Route::get('/pedidos', [PedidoController::class, 'index']);
+    Route::post('/pedidos', [PedidoController::class, 'store']);
+});
