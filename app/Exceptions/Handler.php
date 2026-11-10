@@ -38,4 +38,10 @@ class Handler extends ExceptionHandler
             //
         });
     }
+
+    // Los errores de /api/* siempre salen en JSON (401, 404, 422...), aunque Postman no mande Accept: application/json
+    protected function shouldReturnJson($request, Throwable $e)
+    {
+        return $request->is('api/*') || parent::shouldReturnJson($request, $e);
+    }
 }
