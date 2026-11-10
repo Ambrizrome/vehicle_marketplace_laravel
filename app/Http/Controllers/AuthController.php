@@ -7,7 +7,7 @@ use App\Http\Requests\RegisterRequest;
 use App\Services\AuthService;
 use Illuminate\Http\Request;
 
-// Login de la API con tokens de Sanctum (el login web por sesión está en AuthenticationController)
+// Login de la API con tokens de Sanctum
 class AuthController extends Controller
 {
     protected $authService;

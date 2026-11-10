@@ -1,16 +1,16 @@
-# Sitio Portafolio — Backend II
+# Catálogo de Autos API — Backend II
 
-Un sitio de portafolio sencillo construido con Laravel, desarrollado para la clase de Backend II en CESUN Universidad.
+API REST construida con Laravel, desarrollada para la clase de Backend II en CESUN Universidad.
 
 ## Descripción del Proyecto
 
-El proyecto es una aplicación backend en Laravel que incluye una API REST para un catálogo de autos: marcas, modelos, sucursales y pedidos. Las vistas web (`resources/views`) son plantillas HTML estáticas que se reemplazarán con el frontend.
+El proyecto es una aplicación backend en Laravel con una API REST para un catálogo de autos: marcas, modelos, sucursales, pedidos y ventas. No tiene páginas web; se prueba con Postman.
 
 ## Avance del Trabajo
 
 Hasta el momento hemos realizado lo siguiente:
 
-- **Arquitectura:** configuración de la estructura base del proyecto Laravel (controladores, modelos, rutas y vistas) siguiendo el patrón MVC.
+- **Arquitectura:** flujo Route -> Controller -> Service -> Model; la validación va en FormRequests.
 - **Docker:** entorno de desarrollo con Docker Compose (`.devcontainer/docker-compose.yml`) con dos servicios:
   - `app`: PHP 8.1
   - `db`: MySQL 8.0, que crea la base de datos `larosite` e importa automáticamente el respaldo `larosite.sql`.
@@ -23,12 +23,20 @@ Hasta el momento hemos realizado lo siguiente:
   - Además de las tablas propias de Laravel (`users`, `password_resets`, `failed_jobs`, `personal_access_tokens`).
 - **Modelos:** definición de las relaciones Eloquent: una marca tiene muchos modelos, un modelo pertenece a una marca y está disponible en varias sucursales (relación N a N con stock en la pivote), y un pedido pertenece a un modelo y a una sucursal.
 - **API REST:** endpoints implementados en `routes/api.php`:
-  - `GET /api/marcas` y `GET /api/marcas/{id}` — lista y detalle de marcas.
-  - `GET /api/modelos` y `GET /api/modelos/{id}` — modelos con su marca y las sucursales donde hay stock.
-  - `GET /api/sucursales` y `GET /api/sucursales/{id}` — lista y detalle de sucursales.
-  - `GET /api/pedidos` — lista de pedidos con su modelo, marca y sucursal.
-  - `POST /api/pedidos` — crea un pedido validando los datos, verificando que la sucursal tenga stock y descontando una unidad del inventario.
-- **Seeders:** `CatalogoSeeder` para cargar datos de prueba en el catálogo.
+  - Públicos:
+    - `POST /api/register` y `POST /api/login` — devuelven un token para usar como `Authorization: Bearer <token>`.
+    - `GET /api/marcas` y `GET /api/marcas/{id}` — lista y detalle de marcas.
+    - `GET /api/modelos` y `GET /api/modelos/{id}` — modelos con su marca y las sucursales donde hay stock.
+    - `GET /api/sucursales` y `GET /api/sucursales/{id}` — lista y detalle de sucursales.
+  - Con token:
+    - `GET /api/user` y `POST /api/logout` — usuario del token y cierre de sesión.
+    - `POST /api/pedidos` — crea un pedido validando los datos, verificando que la sucursal tenga stock y descontando una unidad del inventario.
+  - Con token de admin:
+    - `GET /api/pedidos` — lista de pedidos con su modelo, marca y sucursal.
+    - `PATCH /api/pedidos/{id}/estado` — confirma o cancela un pedido pendiente; al cancelar, la unidad vuelve al stock.
+    - `GET /api/ventas` — lista de ventas (pedidos confirmados).
+- **Seeders:** `CatalogoSeeder` para cargar datos de prueba en el catálogo y `AdminSeeder` para crear el usuario admin (necesita `ADMIN_PASSWORD` en el `.env`).
+- **Tests:** `php artisan test` (usan SQLite en memoria, no tocan la base `larosite`).
 
 El proyecto sigue en desarrollo y se irán agregando más funcionalidades conforme avance el curso.
 
