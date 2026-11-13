@@ -2,10 +2,13 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Modelo extends Model
 {
+    use HasFactory;
+
     protected $fillable = ['marca_id', 'nombre', 'anio', 'tipo', 'precio'];
 
     // Campos internos que no se muestran en el JSON

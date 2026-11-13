@@ -27,12 +27,12 @@ use Illuminate\Support\Facades\Route;
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
 
-// Marcas
+// Marcas (públicas para consulta)[cite: 1]
 Route::get('/marcas', [MarcaController::class, 'index']);
 Route::get('/marcas/{id}', [MarcaController::class, 'show'])
     ->whereNumber('id');
 
-// Modelos (productos)
+// Modelos (productos) (públicas para consulta)[cite: 1]
 Route::get('/modelos', [ModeloController::class, 'index']);
 Route::get('/modelos/{id}', [ModeloController::class, 'show'])
     ->whereNumber('id');
@@ -46,15 +46,15 @@ Route::get('/sucursales/{id}', [SucursalController::class, 'show'])
 Route::get('/sucursales/{id}/inventario', [InventarioController::class, 'index'])
     ->whereNumber('id');
 
-// Rutas que requieren token (sin token o con uno inválido responden 401)
+// Rutas que requieren token (sin token o con uno inválido responden 401)[cite: 1]
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('/user', [AuthController::class, 'user']);
     Route::post('/logout', [AuthController::class, 'logout']);
 
-    // Cualquier usuario con token puede crear un pedido
+    // Cualquier usuario con token puede crear un pedido[cite: 1]
     Route::post('/pedidos', [PedidoController::class, 'store']);
 
-    // Solo admin (con token pero sin permiso responde 403)
+    // Solo admin (con token pero sin permiso responde 403)[cite: 1]
     Route::middleware('can:admin')->group(function () {
 
         // La lista lleva nombres de clientes, por eso solo la ve el admin
@@ -63,8 +63,22 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::patch('/pedidos/{id}/estado', [PedidoController::class, 'cambiarEstado'])
             ->whereNumber('id');
 
-        // Ventas = pedidos confirmados
+        // Ventas = pedidos confirmados[cite: 1]
         Route::get('/ventas', [VentaController::class, 'index']);
+
+        // ----------------------------------------------------------------
+        // MÓDULO: CRUD de Marcas y Modelos (Crear, Editar, Borrar - Solo Admin)[cite: 1]
+        // ----------------------------------------------------------------
+        
+        // Marcas
+        Route::post('/marcas', [MarcaController::class, 'store']);
+        Route::put('/marcas/{id}', [MarcaController::class, 'update'])->whereNumber('id');
+        Route::delete('/marcas/{id}', [MarcaController::class, 'destroy'])->whereNumber('id');
+
+        // Modelos
+        Route::post('/modelos', [ModeloController::class, 'store']);
+        Route::put('/modelos/{id}', [ModeloController::class, 'update'])->whereNumber('id');
+        Route::delete('/modelos/{id}', [ModeloController::class, 'destroy'])->whereNumber('id');
     });
 });
 
