@@ -14,6 +14,7 @@ class PedidoEstadoTest extends TestCase
 {
     use RefreshDatabase;
 
+    /** @var \stdClass Fila de modelo_sucursal (id, modelo_id, sucursal_id, stock) */
     private $combinacion;
 
     protected function setUp(): void

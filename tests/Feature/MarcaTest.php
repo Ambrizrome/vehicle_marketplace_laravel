@@ -26,6 +26,7 @@ class MarcaTest extends TestCase
     /** @test */
     public function un_administrador_puede_crear_una_marca()
     {
+        /** @var User $admin */
         $admin = User::factory()->create(['is_admin' => true]);
 
         $response = $this->actingAs($admin, 'sanctum')->postJson('/api/marcas', [
@@ -42,6 +43,7 @@ class MarcaTest extends TestCase
     /** @test */
     public function no_se_puede_borrar_una_marca_si_tiene_modelos_asociados()
     {
+        /** @var User $admin */
         $admin = User::factory()->create(['is_admin' => true]);
         $marca = Marca::factory()->create();
         

@@ -14,6 +14,8 @@ class Kernel extends HttpKernel
      * @var array<int, class-string|string>
      */
     protected $middleware = [
+        // Primero de la lista: envuelve a los demás, así sus cabeceras también llegan a los 404, 422 y 429
+        \App\Http\Middleware\CabecerasSeguridad::class,
         // \App\Http\Middleware\TrustHosts::class,
         \App\Http\Middleware\TrustProxies::class,
         \Fruitcake\Cors\HandleCors::class,
@@ -42,6 +44,9 @@ class Kernel extends HttpKernel
         'api' => [
             // \Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful::class,
             'throttle:api',
+            // Revisan la entrada de todas las rutas /api antes de llegar a los FormRequest de cada módulo
+            \App\Http\Middleware\DetectarInyeccionSql::class,
+            \App\Http\Middleware\PrevenirXss::class,
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
         ],
     ];

@@ -21,9 +21,10 @@ class ModeloService
             ->get();
     }
 
+    // Busca un modelo por id con su marca y las sucursales donde está (con stock)
     public function obtenerModeloPorId($id): Modelo
     {
-        return Modelo::with('marca')->findOrFail($id);
+        return Modelo::with('marca', 'sucursales')->findOrFail($id);
     }
 
     public function crearModelo(array $datos): Modelo
