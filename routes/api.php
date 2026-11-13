@@ -9,17 +9,6 @@ use App\Http\Controllers\SucursalController;
 use App\Http\Controllers\VentaController;
 use Illuminate\Support\Facades\Route;
 
-/*
-|--------------------------------------------------------------------------
-| API Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register API routes for your application. These
-| routes are loaded by the RouteServiceProvider within a group which
-| is assigned the "api" middleware group. Enjoy building your API!
-|
-*/
-
 // Todas las rutas de este archivo llevan el prefijo /api
 // whereNumber('id'): si el id no es número, responde 404 sin consultar la BD
 
